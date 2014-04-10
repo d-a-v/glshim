@@ -146,6 +146,8 @@ void glTexImage2D(GLenum target, GLint level, GLint internalFormat,
     LOAD_GLES(glTexImage2D);
     LOAD_GLES(glTexSubImage2D);
 
+    printError(__FILE__, __LINE__);
+    printf("size: (%d x %d) format: 0x%x, type: 0x%x\n", width, height, format, type);
     switch (target) {
         case GL_PROXY_TEXTURE_2D:
             break;
@@ -157,6 +159,7 @@ void glTexImage2D(GLenum target, GLint level, GLint internalFormat,
                 bound->nwidth = nwidth;
                 bound->nheight = nheight;
             }
+            printf("tex: %d\n", state.texture.bound->texture);
             if (height != nheight || width != nwidth) {
                 gles_glTexImage2D(target, level, format, nwidth, nheight, border,
                                   format, type, NULL);
@@ -171,6 +174,7 @@ void glTexImage2D(GLenum target, GLint level, GLint internalFormat,
     if (pixels != data) {
         free(pixels);
     }
+    printError(__FILE__, __LINE__);
 }
 
 void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset,
@@ -257,7 +261,7 @@ void glBindTexture(GLenum target, GLuint texture) {
             }
 
             k = kh_get(tex, list, texture);
-            gltexture_t *tex = NULL;;
+            gltexture_t *tex = NULL;
             if (k == kh_end(list)){
                 k = kh_put(tex, list, texture, &ret);
                 tex = kh_value(list, k) = malloc(sizeof(gltexture_t));
