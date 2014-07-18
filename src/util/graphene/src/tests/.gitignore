@@ -1,0 +1,16 @@
+/.deps
+/.libs
+/*.o
+/*.log
+/*.trs
+/*.gcda
+/*.gcno
+/matrix
+/point
+/point3d
+/quad
+/rect
+/size
+/vec2
+/vec3
+/vec4
