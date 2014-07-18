@@ -59,6 +59,7 @@
  */
 
 #include "config.h"
+#ifdef GRAPHENE_USE_GOBJECT
 
 #include "graphene-gobject.h"
 
@@ -109,3 +110,4 @@ GRAPHENE_DEFINE_BOXED_TYPE (GrapheneQuad, graphene_quad)
 GRAPHENE_DEFINE_BOXED_TYPE (GrapheneQuaternion, graphene_quaternion)
 
 GRAPHENE_DEFINE_BOXED_TYPE (GrapheneMatrix, graphene_matrix)
+#endif // GRAPHENE_USE_GOBJECT

@@ -34,6 +34,8 @@
 #include "graphene-rect.h"
 #include "graphene-line-segment.h"
 
+#include <stdlib.h>
+
 /**
  * graphene_quad_alloc: (constructor)
  *

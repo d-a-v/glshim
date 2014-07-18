@@ -42,6 +42,7 @@
 #include "graphene-matrix.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * graphene_quaternion_alloc: (constructor)

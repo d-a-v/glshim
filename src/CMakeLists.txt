@@ -1,6 +1,9 @@
 include_directories(util)
 
+# make sure to update the CMake template in tests/util/template if you change this
 file(GLOB_RECURSE GL_SOURCES gl/*.c)
+file(GLOB GRAPHENE_SOURCES util/graphene/src/*.c)
+set(GL_SOURCES ${GL_SOURCES} ${GRAPHENE_SOURCES})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     include_directories(glx)

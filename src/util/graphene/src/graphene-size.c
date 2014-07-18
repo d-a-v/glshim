@@ -34,6 +34,7 @@
 #include "graphene-point.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * graphene_size_alloc: (constructor)

@@ -38,6 +38,7 @@
 #include "graphene-rect.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 static void
 graphene_rect_normalize_internal (graphene_rect_t *r)

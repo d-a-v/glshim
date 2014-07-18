@@ -40,6 +40,7 @@
 #include "graphene-vec3.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * graphene_point3d_alloc: (constructor)

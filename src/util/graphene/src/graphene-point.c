@@ -38,6 +38,7 @@
 #include "graphene-simd4f.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * graphene_point_alloc: (constructor)
