@@ -184,6 +184,7 @@ typedef struct {
 typedef struct {
     GLenum mode;
     matrix_state_t model, projection, texture, color;
+    void *MVP;
 } matrix_states_t;
 
 // global state struct

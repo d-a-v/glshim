@@ -57,21 +57,25 @@ static matrix_state_t *get_current_state() {
 void glLoadIdentity() {
     PUSH_IF_COMPILING(glLoadIdentity);
     *get_current_matrix() = glm::mat4();
+    state.matrix.MVP = NULL;
 }
 
 void glLoadMatrixf(const GLfloat *m) {
     PUSH_IF_COMPILING(glLoadMatrixf);
     *get_current_matrix() = glm::make_mat4(m);
+    state.matrix.MVP = NULL;
 }
 
 void glMatrixMode(GLenum mode) {
     PUSH_IF_COMPILING(glMatrixMode);
     state.matrix.mode = mode;
+    state.matrix.MVP = NULL;
 }
 
 void glMultMatrixf(const GLfloat *m) {
     PUSH_IF_COMPILING(glMultMatrixf);
     *get_current_matrix() *= glm::make_mat4(m);
+    state.matrix.MVP = NULL;
 }
 
 void glPopMatrix() {
@@ -81,6 +85,7 @@ void glPopMatrix() {
     if (top != NULL) {
         delete static_cast<glm::mat4 *>(m->matrix);
         m->matrix = top;
+        state.matrix.MVP = NULL;
     }
 }
 
@@ -89,6 +94,7 @@ void glPushMatrix() {
     matrix_state_t *m = get_current_state();
     glm::mat4 *matrix = new glm::mat4(*static_cast<glm::mat4 *>(m->matrix));
     tack_push(&m->stack, static_cast<void *>(matrix));
+    state.matrix.MVP = NULL;
 }
 
 // GL transform functions
@@ -96,18 +102,21 @@ void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
     PUSH_IF_COMPILING(glRotatef);
     glm::mat4 *m = get_current_matrix();
     *m = glm::rotate(*m, glm::radians(angle), glm::vec3(x, y, z));
+    state.matrix.MVP = NULL;
 }
 
 void glScalef(GLfloat x, GLfloat y, GLfloat z) {
     PUSH_IF_COMPILING(glScalef);
     glm::mat4 *m = get_current_matrix();
     *m = glm::scale(*m, glm::vec3(x, y, z));
+    state.matrix.MVP = NULL;
 }
 
 void glTranslatef(GLfloat x, GLfloat y, GLfloat z) {
     PUSH_IF_COMPILING(glTranslatef);
     glm::mat4 *m = get_current_matrix();
     *m = glm::translate(*m, glm::vec3(x, y, z));
+    state.matrix.MVP = NULL;
 }
 
 void glOrthof(GLfloat left, GLfloat right,
@@ -115,6 +124,7 @@ void glOrthof(GLfloat left, GLfloat right,
               GLfloat near, GLfloat far) {
     PUSH_IF_COMPILING(glOrthof);
     *get_current_matrix() *= glm::ortho(left, right, bottom, top, near, far);
+    state.matrix.MVP = NULL;
 }
 
 void glFrustumf(GLfloat left, GLfloat right,
@@ -122,6 +132,7 @@ void glFrustumf(GLfloat left, GLfloat right,
                 GLfloat near, GLfloat far) {
     PUSH_IF_COMPILING(glFrustumf);
     *get_current_matrix() *= glm::frustum(left, right, bottom, top, near, far);
+    state.matrix.MVP = NULL;
 }
 
 void gl_get_matrix(GLenum mode, GLfloat *out) {
@@ -129,11 +140,14 @@ void gl_get_matrix(GLenum mode, GLfloat *out) {
 }
 
 void gl_transform_vertex(GLfloat out[3], GLfloat in[3]) {
-    glm::mat4 *model = get_matrix(GL_MODELVIEW);
-    glm::mat4 *projection = get_matrix(GL_PROJECTION);
-
+    glm::mat4 *MVP = &state.matrix.MVP;
+    if (MVP == NULL) {
+        glm::mat4 *model = get_matrix(GL_MODELVIEW);
+        glm::mat4 *projection = get_matrix(GL_PROJECTION);
+        *MVP = model * projection;
+    }
     glm::vec4 vert = glm::vec4(in[0], in[1], in[2], 1);
-    vert = (*projection) * (*model) * vert;
+    vert = (*MVP) * vert;
     memcpy(out, glm::value_ptr(vert), sizeof(GLfloat) * 3);
 }
 
